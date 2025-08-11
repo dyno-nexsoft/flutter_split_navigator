@@ -95,9 +95,12 @@ class _FlutterSplitViewState extends NavigatorState {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final bool isSplit = constraints.maxWidth > widget.breakpoint;
       final double primaryWidth, secondaryLeft, secondaryWidth;
-      if (isSplit == false) {
+      if (constraints.maxWidth > widget.breakpoint) {
+        primaryWidth = widget.breakpoint / 2;
+        secondaryLeft = primaryWidth;
+        secondaryWidth = constraints.maxWidth - primaryWidth;
+      } else {
         final canPop = _secondaryKey.currentState?.canPop();
         if (canPop == true) {
           secondaryLeft = 0;
@@ -107,10 +110,6 @@ class _FlutterSplitViewState extends NavigatorState {
           secondaryWidth = constraints.maxWidth;
         }
         primaryWidth = constraints.maxWidth;
-      } else {
-        primaryWidth = widget.breakpoint / 2;
-        secondaryLeft = primaryWidth;
-        secondaryWidth = constraints.maxWidth - primaryWidth;
       }
 
       return Stack(
