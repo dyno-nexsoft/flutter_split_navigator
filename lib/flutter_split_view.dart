@@ -128,7 +128,7 @@ class _FlutterSplitViewState extends NavigatorState {
             child: Navigator(
               key: _secondaryKey,
               observers: [
-                FlutterSplitRouteObserver(setState),
+                FlutterSplitNavigatorObserver(setState),
                 ...widget.observers
               ],
               onGenerateInitialRoutes: (navigator, initialRoute) {

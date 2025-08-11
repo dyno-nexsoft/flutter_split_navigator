@@ -4,11 +4,11 @@ import 'package:flutter/widgets.dart';
 ///
 /// This observer is useful for widgets that need to update their state in response
 /// to navigation events such as push, pop, or remove.
-class FlutterSplitRouteObserver extends NavigatorObserver {
-  /// Creates a [FlutterSplitRouteObserver] with the given [setState] callback.
+class FlutterSplitNavigatorObserver extends NavigatorObserver {
+  /// Creates a [FlutterSplitNavigatorObserver] with the given [setState] callback.
   ///
   /// The [setState] callback will be called after navigation events to trigger a rebuild.
-  FlutterSplitRouteObserver(this.setState);
+  FlutterSplitNavigatorObserver(this.setState);
 
   /// The callback used to update the widget's state.
   final StateSetter setState;
