@@ -1,4 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import 'src/observers.dart';
 
 /// A widget that creates a split view layout, showing two panels side-by-side
 /// on wider screens and a single panel on narrower screens.
@@ -13,8 +15,11 @@ class FlutterSplitView extends Navigator {
     super.restorationScopeId,
     super.observers,
     super.onDidRemovePage,
+    this.breakPoint = 600.0,
     this.placeholder = const Placeholder(),
   });
+
+  final double breakPoint;
 
   /// The widget to show in the secondary panel when no route is pushed.
   final Widget placeholder;
@@ -55,7 +60,8 @@ class _FlutterSplitViewState extends NavigatorState {
   Widget build(BuildContext context) {
     StatefulBuilder;
     return LayoutBuilder(builder: (context, constraints) {
-      final bool isSplit = constraints.maxWidth > 600;
+      final bool isSplit = constraints.maxWidth > widget.breakPoint;
+      final double primaryWidth = widget.breakPoint / 2;
       final double secondaryLeft, secondaryWidth;
       if (isSplit == false) {
         final canPop = _secondaryKey.currentState?.canPop();
@@ -67,15 +73,15 @@ class _FlutterSplitViewState extends NavigatorState {
           secondaryWidth = constraints.maxWidth;
         }
       } else {
-        secondaryLeft = 300;
-        secondaryWidth = constraints.maxWidth - 300;
+        secondaryLeft = primaryWidth;
+        secondaryWidth = constraints.maxWidth - primaryWidth;
       }
 
       return Stack(
         children: [
           Positioned(
             left: 0,
-            width: isSplit ? 300 : constraints.maxWidth,
+            width: isSplit ? primaryWidth : constraints.maxWidth,
             height: constraints.maxHeight,
             child: super.build(context),
           ),
@@ -85,15 +91,28 @@ class _FlutterSplitViewState extends NavigatorState {
             height: constraints.maxHeight,
             child: Navigator(
               key: _secondaryKey,
-              pages: <Page>[MaterialPage(child: widget.placeholder)],
               observers: [
-                _RouteObserver(() {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) setState(() {});
-                  });
-                }),
+                FlutterSplitRouteObserver(setState),
                 ...widget.observers
               ],
+              onGenerateInitialRoutes: (navigator, initialRoute) {
+                return [
+                  PageRouteBuilder(
+                    pageBuilder: (
+                      BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation,
+                    ) {
+                      return LayoutBuilder(builder: (context, constraints) {
+                        if (constraints.maxWidth > widget.breakPoint) {
+                          return widget.placeholder;
+                        }
+                        return const SizedBox.shrink();
+                      });
+                    },
+                  )
+                ];
+              },
               onGenerateRoute: widget.onGenerateRoute,
             ),
           ),
@@ -101,18 +120,4 @@ class _FlutterSplitViewState extends NavigatorState {
       );
     });
   }
-}
-
-class _RouteObserver extends NavigatorObserver {
-  _RouteObserver(this.callback);
-  final VoidCallback callback;
-
-  @override
-  void didPop(Route route, Route? previousRoute) => callback();
-
-  @override
-  void didPush(Route route, Route? previousRoute) => callback();
-
-  @override
-  void didRemove(Route route, Route? previousRoute) => callback();
 }
