@@ -58,7 +58,6 @@ class _FlutterSplitViewState extends NavigatorState {
 
   @override
   Widget build(BuildContext context) {
-    StatefulBuilder;
     return LayoutBuilder(builder: (context, constraints) {
       final bool isSplit = constraints.maxWidth > widget.breakPoint;
       final double primaryWidth = widget.breakPoint / 2;
