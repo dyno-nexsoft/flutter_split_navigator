@@ -29,21 +29,21 @@ class MyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Example split view')),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FilledButton(
-              onPressed: () => Navigator.of(context).pushNamed('/'),
-              child: const Text('Navigator push'),
-            ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => FlutterSplitView.of(context).pushNamed('/'),
-              child: const Text('FlutterSplitView push'),
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        itemCount: 100,
+        itemBuilder: (BuildContext context, int index) {
+          if (index.isEven) {
+            return ListTile(
+              onTap: () => Navigator.of(context).pushNamed('/'),
+              title: const Text('Navigator push'),
+            );
+          } else {
+            return ListTile(
+              onTap: () => FlutterSplitView.of(context).pushNamed('/'),
+              title: const Text('FlutterSplitView push'),
+            );
+          }
+        },
       ),
     );
   }
