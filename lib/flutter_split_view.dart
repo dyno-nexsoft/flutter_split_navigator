@@ -96,8 +96,7 @@ class _FlutterSplitViewState extends NavigatorState {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final bool isSplit = constraints.maxWidth > widget.breakpoint;
-      final double primaryWidth = widget.breakpoint / 2;
-      final double secondaryLeft, secondaryWidth;
+      final double primaryWidth, secondaryLeft, secondaryWidth;
       if (isSplit == false) {
         final canPop = _secondaryKey.currentState?.canPop();
         if (canPop == true) {
@@ -107,7 +106,9 @@ class _FlutterSplitViewState extends NavigatorState {
           secondaryLeft = constraints.maxWidth;
           secondaryWidth = constraints.maxWidth;
         }
+        primaryWidth = constraints.maxWidth;
       } else {
+        primaryWidth = widget.breakpoint / 2;
         secondaryLeft = primaryWidth;
         secondaryWidth = constraints.maxWidth - primaryWidth;
       }
@@ -116,7 +117,7 @@ class _FlutterSplitViewState extends NavigatorState {
         children: [
           Positioned(
             left: 0,
-            width: isSplit ? primaryWidth : constraints.maxWidth,
+            width: primaryWidth,
             height: constraints.maxHeight,
             child: super.build(context),
           ),
