@@ -2,43 +2,67 @@
 
 [![Deploy Web](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml/badge.svg)](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml)
 
-A Flutter widget that creates a split view layout, showing two panels side-by-side on wider screens and a single panel on narrower screens.
+A Flutter widget for building responsive split view layouts. Show two panels side-by-side on wide screens, and a single panel with secondary navigation on narrow screens.
+
+---
+
+## Features
+
+- Responsive split view: automatically adapts to screen width.
+- Primary and secondary navigation using two [Navigator]s.
+- Customizable breakpoint for switching layouts.
+- Placeholder widget for the secondary panel.
+- Easy integration with existing navigation logic.
+
+---
+
+## Getting Started
+
+Add `flutter_split_view` to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  flutter_split_view: ^1.0.0
+```
+
+---
 
 ## Usage
 
-To use this package, add `flutter_split_view` as a [dependency in your pubspec.yaml file](https://flutter.dev/to/add-a-dependency).
+See the [`example`](example/lib/main.dart) for a complete usage example.
 
-Then, you can use the `FlutterSplitView` widget in your app. Here is a simple example:
+To use this package, add `flutter_split_view` as a [dependency in your pubspec.yaml file](https://dart.dev/tools/pub/cmd/pub-add).
+
+For more details, please see the `example` directory.
+
+---
+
+## API
+
+### `FlutterSplitView`
+
+| Property          | Description                                                 | Default         |
+| ----------------- | ----------------------------------------------------------- | --------------- |
+| `breakpoint`      | Minimum width to show both panels side-by-side              | `600.0`         |
+| `placeholder`     | Widget shown in the secondary panel when no route is pushed | `Placeholder()` |
+| `onGenerateRoute` | Route generator for navigation in both panels               | _(required)_    |
+
+#### Accessing the secondary navigator
+
+You can push routes to the secondary panel using:
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_split_view/flutter_split_view.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: FlutterSplitView(
-        placeholder: Center(
-          child: Text('Placeholder'),
-        ),
-        initialRoute: '/',
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case '/':
-              return MaterialPageRoute(builder: (context) => Text('Main Page'));
-            default:
-              return MaterialPageRoute(builder: (context) => Text('Unknown Page'));
-          }
-        },
-      ),
-    );
-  }
-}
+FlutterSplitView.of(context).pushNamed('/details');
 ```
 
-For a more detailed example, please see the `example` directory.
+---
+
+## Example
+
+See the [`example`](example) directory for a complete app.
+
+---
+
+## License
+
+MIT © 2025
