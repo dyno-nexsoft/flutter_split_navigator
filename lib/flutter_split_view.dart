@@ -93,6 +93,7 @@ class FlutterSplitView extends Navigator {
 
 class _FlutterSplitViewState extends NavigatorState {
   final _secondaryKey = GlobalKey<NavigatorState>();
+  late final _secondaryObserver = FlutterSplitNavigatorObserver(setState);
 
   @override
   FlutterSplitView get widget => super.widget as FlutterSplitView;
@@ -131,10 +132,7 @@ class _FlutterSplitViewState extends NavigatorState {
             height: constraints.maxHeight,
             child: Navigator(
               key: _secondaryKey,
-              observers: [
-                FlutterSplitNavigatorObserver(setState),
-                ...widget.observers
-              ],
+              observers: [_secondaryObserver, ...widget.observers],
               onGenerateInitialRoutes: (navigator, initialRoute) {
                 return [
                   PageRouteBuilder(
@@ -153,7 +151,16 @@ class _FlutterSplitViewState extends NavigatorState {
                   )
                 ];
               },
+              initialRoute: widget.initialRoute,
               onGenerateRoute: widget.onGenerateRoute,
+              onUnknownRoute: widget.onUnknownRoute,
+              transitionDelegate: widget.transitionDelegate,
+              reportsRouteUpdateToEngine: widget.reportsRouteUpdateToEngine,
+              clipBehavior: widget.clipBehavior,
+              requestFocus: widget.requestFocus,
+              restorationScopeId: widget.restorationScopeId,
+              routeTraversalEdgeBehavior: widget.routeTraversalEdgeBehavior,
+              onDidRemovePage: widget.onDidRemovePage,
             ),
           ),
         ],
