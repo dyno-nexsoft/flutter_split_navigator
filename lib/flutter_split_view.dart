@@ -71,23 +71,21 @@ class FlutterSplitView extends Navigator {
   /// [Navigator]. Throws a [FlutterError] if no [FlutterSplitView] ancestor
   /// can be found in the widget tree.
   static NavigatorState of(BuildContext context) {
-    _FlutterSplitViewState? navigator;
-    if (context is StatefulElement && context.state is _FlutterSplitViewState) {
-      navigator = context.state as _FlutterSplitViewState;
-    }
-    navigator ??= context.findAncestorStateOfType<_FlutterSplitViewState>();
+    return _of(context)._secondaryKey.currentState!;
+  }
 
-    assert(() {
-      if (navigator == null) {
-        throw FlutterError(
-          'Navigator operation requested with a context that does not include a Navigator.\n'
-          'The context used to push or pop routes from the Navigator must be that of a '
-          'widget that is a descendant of a Navigator widget.',
-        );
-      }
-      return true;
-    }());
-    return navigator!._secondaryKey.currentState!;
+  /// Returns `true` if the [FlutterSplitView] ancestor of the given [context]
+  /// is currently displaying both panels side-by-side (split mode).
+  ///
+  /// This can be used to determine whether the split view is active, based on
+  /// the current layout constraints and the [breakpoint] value.
+  ///
+  /// Example:
+  /// ```dart
+  /// final isSplit = FlutterSplitView.isSplitOf(context);
+  /// ```
+  static bool isSplitOf(BuildContext context) {
+    return _of(context)._isSplit.value;
   }
 }
 
@@ -177,4 +175,24 @@ class _FlutterSplitViewState extends NavigatorState {
       );
     });
   }
+}
+
+_FlutterSplitViewState _of(BuildContext context) {
+  _FlutterSplitViewState? navigator;
+  if (context is StatefulElement && context.state is _FlutterSplitViewState) {
+    navigator = context.state as _FlutterSplitViewState;
+  }
+  navigator ??= context.findAncestorStateOfType<_FlutterSplitViewState>();
+
+  assert(() {
+    if (navigator == null) {
+      throw FlutterError(
+        'Navigator operation requested with a context that does not include a Navigator.\n'
+        'The context used to push or pop routes from the Navigator must be that of a '
+        'widget that is a descendant of a Navigator widget.',
+      );
+    }
+    return true;
+  }());
+  return navigator!;
 }
