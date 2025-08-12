@@ -94,15 +94,23 @@ class FlutterSplitView extends Navigator {
 class _FlutterSplitViewState extends NavigatorState {
   final _secondaryKey = GlobalKey<NavigatorState>();
   late final _secondaryObserver = FlutterSplitNavigatorObserver(setState);
+  final _isSplit = ValueNotifier<bool>(false);
 
   @override
   FlutterSplitView get widget => super.widget as FlutterSplitView;
 
   @override
+  void dispose() {
+    _isSplit.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
+      _isSplit.value = constraints.maxWidth > widget.breakpoint;
       final double primaryWidth, secondaryLeft, secondaryWidth;
-      if (constraints.maxWidth > widget.breakpoint) {
+      if (_isSplit.value) {
         primaryWidth = widget.breakpoint / 2;
         secondaryLeft = primaryWidth;
         secondaryWidth = constraints.maxWidth - primaryWidth;
@@ -141,12 +149,14 @@ class _FlutterSplitViewState extends NavigatorState {
                       Animation<double> animation,
                       Animation<double> secondaryAnimation,
                     ) {
-                      return LayoutBuilder(builder: (context, constraints) {
-                        if (constraints.maxWidth > widget.breakpoint) {
-                          return widget.placeholder;
-                        }
-                        return const SizedBox.shrink();
-                      });
+                      return ValueListenableBuilder<bool>(
+                        valueListenable: _isSplit,
+                        builder: (context, value, child) {
+                          if (value) return child!;
+                          return const SizedBox.shrink();
+                        },
+                        child: widget.placeholder,
+                      );
                     },
                   )
                 ];

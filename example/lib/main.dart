@@ -20,6 +20,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       home: FlutterSplitView(
+        breakpoint: 700,
+        placeholder: const Material(
+          child: Center(
+            child: Text('Select an item'),
+          ),
+        ),
         onGenerateRoute: (settings) {
           return MaterialPageRoute(
             builder: (context) => const MyScreen(),
