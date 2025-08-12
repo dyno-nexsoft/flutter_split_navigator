@@ -1,6 +1,7 @@
 # flutter_split_view
 
 [![Deploy Web](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml/badge.svg)](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml)
+[![GitHub issues](https://img.shields.io/github/issues/dyno-nexsoft/flutter_split_view.svg)](https://github.com/dyno-nexsoft/flutter_split_view/issues)
 
 A Flutter widget for building responsive split view layouts. Show two panels side-by-side on wide screens, and a single panel with secondary navigation on narrow screens.
 
@@ -18,22 +19,80 @@ A Flutter widget for building responsive split view layouts. Show two panels sid
 
 ## Getting Started
 
-Add `flutter_split_view` to your `pubspec.yaml`:
+Add `flutter_split_view` to your `pubspec.yaml` dependencies from GitHub:
 
 ```yaml
 dependencies:
-  flutter_split_view: ^1.0.0
+  flutter_split_view:
+    git: https://github.com/dyno-nexsoft/flutter_split_view.git
 ```
 
 ---
 
 ## Usage
 
-See the [`example`](example/lib/main.dart) for a complete usage example.
+Import the package:
 
-To use this package, add `flutter_split_view` as a [dependency in your pubspec.yaml file](https://dart.dev/tools/pub/cmd/pub-add).
+```dart
+import 'package:flutter_split_view/flutter_split_view.dart';
+```
 
-For more details, please see the `example` directory.
+Wrap your `MaterialApp` with `FlutterSplitView` and provide an `onGenerateRoute` callback:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:flutter_split_view/flutter_split_view.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: FlutterSplitView(
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => const MyScreen(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class MyScreen extends StatelessWidget {
+  const MyScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Example split view')),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FilledButton(
+              onPressed: () => Navigator.of(context).pushNamed('/'),
+              child: const Text('Navigator push'),
+            ),
+            const SizedBox(height: 16),
+            FilledButton(
+              onPressed: () => FlutterSplitView.of(context).pushNamed('/'),
+              child: const Text('FlutterSplitView push'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+To push a new route to the secondary panel, use `FlutterSplitView.of(context).pushNamed('/your-route')`.
 
 ---
 

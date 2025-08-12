@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '**.dart'
+      - 'example/**'
+      - '.github/workflows/deploy_web.yml'
 
 jobs:
   build:
