@@ -130,45 +130,53 @@ class _FlutterSplitViewState extends NavigatorState {
             left: 0,
             width: primaryWidth,
             height: constraints.maxHeight,
-            child: super.build(context),
+            child: MediaQuery.removePadding(
+              context: context,
+              removeRight: _isSplit.value,
+              child: super.build(context),
+            ),
           ),
           Positioned(
             left: secondaryLeft,
             width: secondaryWidth,
             height: constraints.maxHeight,
-            child: Navigator(
-              key: _secondaryKey,
-              observers: [_secondaryObserver, ...widget.observers],
-              onGenerateInitialRoutes: (navigator, initialRoute) {
-                return [
-                  PageRouteBuilder(
-                    pageBuilder: (
-                      BuildContext context,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,
-                    ) {
-                      return ValueListenableBuilder<bool>(
-                        valueListenable: _isSplit,
-                        builder: (context, value, child) {
-                          if (value) return child!;
-                          return const SizedBox.shrink();
-                        },
-                        child: widget.placeholder,
-                      );
-                    },
-                  )
-                ];
-              },
-              initialRoute: widget.initialRoute,
-              onGenerateRoute: widget.onGenerateRoute,
-              onUnknownRoute: widget.onUnknownRoute,
-              transitionDelegate: widget.transitionDelegate,
-              reportsRouteUpdateToEngine: widget.reportsRouteUpdateToEngine,
-              clipBehavior: widget.clipBehavior,
-              requestFocus: widget.requestFocus,
-              restorationScopeId: widget.restorationScopeId,
-              routeTraversalEdgeBehavior: widget.routeTraversalEdgeBehavior,
-              onDidRemovePage: widget.onDidRemovePage,
+            child: MediaQuery.removePadding(
+              context: context,
+              removeLeft: _isSplit.value,
+              child: Navigator(
+                key: _secondaryKey,
+                observers: [_secondaryObserver, ...widget.observers],
+                onGenerateInitialRoutes: (navigator, initialRoute) {
+                  return [
+                    PageRouteBuilder(
+                      pageBuilder: (
+                        BuildContext context,
+                        Animation<double> animation,
+                        Animation<double> secondaryAnimation,
+                      ) {
+                        return ValueListenableBuilder<bool>(
+                          valueListenable: _isSplit,
+                          builder: (context, value, child) {
+                            if (value) return child!;
+                            return const SizedBox.shrink();
+                          },
+                          child: widget.placeholder,
+                        );
+                      },
+                    )
+                  ];
+                },
+                initialRoute: widget.initialRoute,
+                onGenerateRoute: widget.onGenerateRoute,
+                onUnknownRoute: widget.onUnknownRoute,
+                transitionDelegate: widget.transitionDelegate,
+                reportsRouteUpdateToEngine: widget.reportsRouteUpdateToEngine,
+                clipBehavior: widget.clipBehavior,
+                requestFocus: widget.requestFocus,
+                restorationScopeId: widget.restorationScopeId,
+                routeTraversalEdgeBehavior: widget.routeTraversalEdgeBehavior,
+                onDidRemovePage: widget.onDidRemovePage,
+              ),
             ),
           ),
         ],
