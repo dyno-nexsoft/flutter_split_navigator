@@ -195,9 +195,9 @@ _FlutterSplitViewState _of(BuildContext context) {
   assert(() {
     if (navigator == null) {
       throw FlutterError(
-        'Navigator operation requested with a context that does not include a Navigator.\n'
-        'The context used to push or pop routes from the Navigator must be that of a '
-        'widget that is a descendant of a Navigator widget.',
+        'FlutterSplitView operation requested with a context that does not include a FlutterSplitView.\n'
+        'The context used to push or pop routes from the FlutterSplitView must be that of a '
+        'widget that is a descendant of a FlutterSplitView widget.',
       );
     }
     return true;
