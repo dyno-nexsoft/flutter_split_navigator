@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_split_view",
+            "name": "Example",
             "request": "launch",
             "type": "dart",
             "cwd": "example",
+        },
+        {
+            "name": "Example (Go router)",
+            "request": "launch",
+            "type": "dart",
+            "cwd": "example",
+            "program": "lib/main_with_go_router.dart"
         }
     ]
 }

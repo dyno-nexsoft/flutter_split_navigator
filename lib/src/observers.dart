@@ -8,14 +8,14 @@ class FlutterSplitNavigatorObserver extends NavigatorObserver {
   /// Creates a [FlutterSplitNavigatorObserver] with the given [setState] callback.
   ///
   /// The [setState] callback will be called after navigation events to trigger a rebuild.
-  FlutterSplitNavigatorObserver(this.setState);
+  FlutterSplitNavigatorObserver([this.setState]);
 
   /// The callback used to update the widget's state.
-  final StateSetter setState;
+  StateSetter? setState;
 
   /// Schedules a call to [setState] after the current frame.
   void _update() => WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {});
+        setState?.call(() {});
       });
 
   /// Called when a route has been popped off the navigator.
