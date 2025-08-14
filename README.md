@@ -22,7 +22,7 @@ A Flutter widget for building responsive split view layouts. Show two panels sid
 See the API documentation for details on the following topics:
 
 - [Getting started](doc/get-started.md)
-- [Custom split view](doc/custom-split-view.md)
+- [Custom with Go Router](example/lib/main_with_go_router.dart#L84)
 
 ## Example
 
