@@ -17,7 +17,7 @@ mixin SplitHandler<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 
-  Widget buildBody(BuildContext context) {
+  Widget buildSplit(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       isSplit.value = constraints.maxWidth > breakpoint;
       final double primaryWidth, secondaryLeft, secondaryWidth;

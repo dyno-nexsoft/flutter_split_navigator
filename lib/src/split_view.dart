@@ -105,7 +105,7 @@ class _FlutterSplitViewState extends NavigatorState with SplitHandler {
 
   @override
   Widget build(BuildContext context) {
-    return super.buildBody(context);
+    return super.buildSplit(context);
   }
 
   @override
