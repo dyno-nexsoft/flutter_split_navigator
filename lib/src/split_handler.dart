@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-mixin SplitHandler<T extends StatefulWidget> on State<T> {
+mixin FlutterSplitHandler<T extends StatefulWidget> on State<T> {
   final isSplit = ValueNotifier<bool>(false);
 
   double get breakpoint;

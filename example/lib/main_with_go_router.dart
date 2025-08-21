@@ -18,18 +18,13 @@ class CustomSplitView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _State();
 
-  static final navigatorObserver = FlutterSplitNavigatorObserver();
   static final chatNavigatorKey = GlobalKey<NavigatorState>();
+  static final chatNavigatorObserver = FlutterSplitNavigatorObserver();
   static final settingNavigatorKey = GlobalKey<NavigatorState>();
+  static final settingNavigatorObserver = FlutterSplitNavigatorObserver();
 }
 
-class _State extends State<CustomSplitView> with SplitHandler {
-  @override
-  void initState() {
-    super.initState();
-    CustomSplitView.navigatorObserver.setState = setState;
-  }
-
+class _State extends State<CustomSplitView> with FlutterSplitHandler {
   @override
   double get breakpoint => 700.0;
 
@@ -42,7 +37,17 @@ class _State extends State<CustomSplitView> with SplitHandler {
 
   @override
   Widget build(BuildContext context) {
-    return super.buildSplit(context);
+    return ListenableBuilder(
+      listenable: CustomSplitView.chatNavigatorObserver,
+      builder: (context, child) {
+        return ListenableBuilder(
+          listenable: CustomSplitView.settingNavigatorObserver,
+          builder: (context, child) {
+            return super.buildSplit(context);
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -70,12 +75,12 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       routerConfig: GoRouter(
         initialLocation: '/chat',
-        observers: [CustomSplitView.navigatorObserver],
         routes: [
           StatefulShellRoute.indexedStack(
             branches: [
               StatefulShellBranch(
                 navigatorKey: CustomSplitView.chatNavigatorKey,
+                observers: [CustomSplitView.chatNavigatorObserver],
                 routes: [
                   GoRoute(
                     path: '/chat',
@@ -90,7 +95,7 @@ class MyApp extends StatelessWidget {
                       GoRoute(
                         path: ':chatId',
                         builder: (context, state) => ChatDetailScreen(
-                          chatId: state.pathParameters['chatId'] ?? '',
+                          chatId: state.pathParameters['chatId'],
                         ),
                       ),
                     ],
@@ -99,6 +104,7 @@ class MyApp extends StatelessWidget {
               ),
               StatefulShellBranch(
                 navigatorKey: CustomSplitView.settingNavigatorKey,
+                observers: [CustomSplitView.settingNavigatorObserver],
                 routes: [
                   GoRoute(
                     path: '/setting',
@@ -113,7 +119,7 @@ class MyApp extends StatelessWidget {
                       GoRoute(
                         path: ':settingId',
                         builder: (context, state) => SettingDetailScreen(
-                          settingId: state.pathParameters['settingId'] ?? '',
+                          settingId: state.pathParameters['settingId'],
                         ),
                       ),
                     ],
@@ -169,52 +175,8 @@ class DashboardScreen extends StatelessWidget {
         return IndexedStack(
           index: index,
           children: [
-            CustomScrollView(
-              slivers: <Widget>[
-                const CupertinoSliverNavigationBar.search(
-                  largeTitle: Text('Chats'),
-                  searchField: CupertinoSearchTextField(),
-                ),
-                SliverList.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return CupertinoListTile(
-                      backgroundColor:
-                          state.pathParameters['chatId'] == index.toString()
-                          ? CupertinoColors.systemGrey6.resolveFrom(context)
-                          : null,
-                      title: Text('Chat $index'),
-                      subtitle: const Text('Last message preview'),
-                      leading: const Icon(
-                        CupertinoIcons.profile_circled,
-                        size: 32.0,
-                      ),
-                      onTap: () => GoRouter.of(context).go('/chat/$index'),
-                    );
-                  },
-                ),
-              ],
-            ),
-            CupertinoPageScaffold(
-              navigationBar: CupertinoNavigationBar.large(
-                largeTitle: const Text('Settings'),
-              ),
-              child: ListView.builder(
-                itemCount: 20,
-                itemBuilder: (context, index) {
-                  return CupertinoListTile(
-                    backgroundColor:
-                        state.pathParameters['settingId'] == index.toString()
-                        ? CupertinoColors.systemGrey6.resolveFrom(context)
-                        : null,
-                    title: Text('Setting $index'),
-                    subtitle: const Text('Setting description'),
-                    leading: const Icon(CupertinoIcons.settings, size: 32.0),
-                    onTap: () => GoRouter.of(context).go('/setting/$index'),
-                  );
-                },
-              ),
-            ),
+            ChatScreen(chatId: state.pathParameters['chatId']),
+            SettingScreen(settingId: state.pathParameters['settingId']),
           ],
         );
       },
@@ -222,10 +184,42 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 
+class ChatScreen extends StatelessWidget {
+  const ChatScreen({super.key, required this.chatId});
+
+  final String? chatId;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: <Widget>[
+        const CupertinoSliverNavigationBar.search(
+          largeTitle: Text('Chats'),
+          searchField: CupertinoSearchTextField(),
+        ),
+        SliverList.builder(
+          itemCount: 20,
+          itemBuilder: (context, index) {
+            return CupertinoListTile(
+              backgroundColor: chatId == index.toString()
+                  ? CupertinoColors.systemGrey6.resolveFrom(context)
+                  : null,
+              title: Text('Chat $index'),
+              subtitle: const Text('Last message preview'),
+              leading: const Icon(CupertinoIcons.profile_circled, size: 32.0),
+              onTap: () => GoRouter.of(context).go('/chat/$index'),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class ChatDetailScreen extends StatelessWidget {
   const ChatDetailScreen({super.key, required this.chatId});
 
-  final String chatId;
+  final String? chatId;
 
   @override
   Widget build(BuildContext context) {
@@ -272,10 +266,39 @@ class ChatDetailScreen extends StatelessWidget {
   }
 }
 
+class SettingScreen extends StatelessWidget {
+  const SettingScreen({super.key, required this.settingId});
+
+  final String? settingId;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar.large(
+        largeTitle: const Text('Settings'),
+      ),
+      child: ListView.builder(
+        itemCount: 20,
+        itemBuilder: (context, index) {
+          return CupertinoListTile(
+            backgroundColor: settingId == index.toString()
+                ? CupertinoColors.systemGrey6.resolveFrom(context)
+                : null,
+            title: Text('Setting $index'),
+            subtitle: const Text('Setting description'),
+            leading: const Icon(CupertinoIcons.settings, size: 32.0),
+            onTap: () => GoRouter.of(context).go('/setting/$index'),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class SettingDetailScreen extends StatelessWidget {
   const SettingDetailScreen({super.key, required this.settingId});
 
-  final String settingId;
+  final String? settingId;
 
   @override
   Widget build(BuildContext context) {

@@ -90,9 +90,9 @@ class FlutterSplitView extends Navigator {
   }
 }
 
-class _FlutterSplitViewState extends NavigatorState with SplitHandler {
+class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
   final _secondaryKey = GlobalKey<NavigatorState>();
-  late final _secondaryObserver = FlutterSplitNavigatorObserver(setState);
+  late final _secondaryObserver = FlutterSplitNavigatorObserver();
 
   @override
   FlutterSplitView get widget => super.widget as FlutterSplitView;
@@ -105,7 +105,12 @@ class _FlutterSplitViewState extends NavigatorState with SplitHandler {
 
   @override
   Widget build(BuildContext context) {
-    return super.buildSplit(context);
+    return ListenableBuilder(
+      listenable: _secondaryObserver,
+      builder: (context, child) {
+        return super.buildSplit(context);
+      },
+    );
   }
 
   @override
