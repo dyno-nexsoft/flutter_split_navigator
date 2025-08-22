@@ -32,7 +32,7 @@ class _State extends State<CustomSplitView> with FlutterSplitHandler {
   bool canPop() => switch (widget.navigationShell.currentIndex) {
     0 => CustomSplitView.chatNavigatorKey.currentState?.canPop() ?? false,
     1 => CustomSplitView.settingNavigatorKey.currentState?.canPop() ?? false,
-    int() => false,
+    int() => throw UnimplementedError(),
   };
 
   @override
@@ -131,10 +131,7 @@ class MyApp extends StatelessWidget {
               return CustomSplitView(
                 state: state,
                 navigationShell: navigationShell,
-                child: DashboardScreen(
-                  state: state,
-                  navigationShell: navigationShell,
-                ),
+                child: DashboardScreen(navigationShell: navigationShell),
               );
             },
           ),
@@ -145,13 +142,8 @@ class MyApp extends StatelessWidget {
 }
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({
-    super.key,
-    required this.state,
-    required this.navigationShell,
-  });
+  const DashboardScreen({super.key, required this.navigationShell});
 
-  final GoRouterState state;
   final StatefulNavigationShell navigationShell;
 
   @override
@@ -172,12 +164,12 @@ class DashboardScreen extends StatelessWidget {
         ],
       ),
       tabBuilder: (BuildContext context, int index) {
-        return IndexedStack(
-          index: index,
-          children: [
-            ChatScreen(chatId: state.pathParameters['chatId']),
-            SettingScreen(settingId: state.pathParameters['settingId']),
-          ],
+        return CupertinoTabView(
+          builder: (context) => switch (index) {
+            0 => ChatScreen(),
+            1 => SettingScreen(),
+            int() => throw UnimplementedError(),
+          },
         );
       },
     );
@@ -185,9 +177,7 @@ class DashboardScreen extends StatelessWidget {
 }
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key, required this.chatId});
-
-  final String? chatId;
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +191,6 @@ class ChatScreen extends StatelessWidget {
           itemCount: 20,
           itemBuilder: (context, index) {
             return CupertinoListTile(
-              backgroundColor: chatId == index.toString()
-                  ? CupertinoColors.systemGrey6.resolveFrom(context)
-                  : null,
               title: Text('Chat $index'),
               subtitle: const Text('Last message preview'),
               leading: const Icon(CupertinoIcons.profile_circled, size: 32.0),
@@ -267,9 +254,7 @@ class ChatDetailScreen extends StatelessWidget {
 }
 
 class SettingScreen extends StatelessWidget {
-  const SettingScreen({super.key, required this.settingId});
-
-  final String? settingId;
+  const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -281,9 +266,6 @@ class SettingScreen extends StatelessWidget {
         itemCount: 20,
         itemBuilder: (context, index) {
           return CupertinoListTile(
-            backgroundColor: settingId == index.toString()
-                ? CupertinoColors.systemGrey6.resolveFrom(context)
-                : null,
             title: Text('Setting $index'),
             subtitle: const Text('Setting description'),
             leading: const Icon(CupertinoIcons.settings, size: 32.0),
