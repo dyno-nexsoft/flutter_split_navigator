@@ -6,12 +6,10 @@ import 'package:go_router/go_router.dart';
 class CustomSplitView extends StatefulWidget {
   const CustomSplitView({
     super.key,
-    required this.state,
     required this.navigationShell,
     required this.child,
   });
 
-  final GoRouterState state;
   final StatefulNavigationShell navigationShell;
   final Widget child;
 
@@ -38,14 +36,12 @@ class _State extends State<CustomSplitView> with FlutterSplitHandler {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: CustomSplitView.chatNavigatorObserver,
+      listenable: Listenable.merge([
+        CustomSplitView.chatNavigatorObserver,
+        CustomSplitView.settingNavigatorObserver,
+      ]),
       builder: (context, child) {
-        return ListenableBuilder(
-          listenable: CustomSplitView.settingNavigatorObserver,
-          builder: (context, child) {
-            return super.buildSplit(context);
-          },
-        );
+        return super.buildSplit(context);
       },
     );
   }
@@ -129,9 +125,11 @@ class MyApp extends StatelessWidget {
             ],
             builder: (context, state, navigationShell) {
               return CustomSplitView(
-                state: state,
                 navigationShell: navigationShell,
-                child: DashboardScreen(navigationShell: navigationShell),
+                child: DashboardScreen(
+                  state: state,
+                  navigationShell: navigationShell,
+                ),
               );
             },
           ),
@@ -142,8 +140,13 @@ class MyApp extends StatelessWidget {
 }
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key, required this.navigationShell});
+  const DashboardScreen({
+    super.key,
+    required this.state,
+    required this.navigationShell,
+  });
 
+  final GoRouterState state;
   final StatefulNavigationShell navigationShell;
 
   @override

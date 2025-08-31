@@ -2,8 +2,6 @@ import 'package:flutter/widgets.dart';
 
 class FlutterSplitNavigatorObserver extends NavigatorObserver
     with ChangeNotifier {
-  FlutterSplitNavigatorObserver();
-
   @override
   void notifyListeners() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
