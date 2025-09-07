@@ -72,7 +72,7 @@ class FlutterSplitView extends Navigator {
   /// [Navigator]. Throws a [FlutterError] if no [FlutterSplitView] ancestor
   /// can be found in the widget tree.
   static NavigatorState of(BuildContext context) {
-    return _of(context)._secondaryKey.currentState!;
+    return _of(context)._secondaryObserver.navigator!;
   }
 
   /// Returns `true` if the [FlutterSplitView] ancestor of the given [context]
@@ -91,7 +91,6 @@ class FlutterSplitView extends Navigator {
 }
 
 class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
-  final _secondaryKey = GlobalKey<NavigatorState>();
   late final _secondaryObserver = FlutterSplitNavigatorObserver();
 
   @override
@@ -101,7 +100,7 @@ class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
   double get breakpoint => widget.breakpoint;
 
   @override
-  bool canPop() => _secondaryKey.currentState?.canPop() ?? false;
+  bool canPop() => _secondaryObserver.canPop();
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +120,6 @@ class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
   @override
   Widget buildSecondary(BuildContext context) {
     return Navigator(
-      key: _secondaryKey,
       observers: [_secondaryObserver, ...widget.observers],
       onGenerateInitialRoutes: (navigator, initialRoute) {
         return [

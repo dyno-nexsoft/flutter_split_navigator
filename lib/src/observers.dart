@@ -2,11 +2,16 @@ import 'package:flutter/widgets.dart';
 
 class FlutterSplitNavigatorObserver extends NavigatorObserver
     with ChangeNotifier {
+  bool _canPop = false;
+
+  bool canPop() => _canPop;
+
   @override
   void notifyListeners() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (navigator?.canPop() case final value? when value != _canPop) {
+      _canPop = value;
       super.notifyListeners();
-    });
+    }
   }
 
   @override
@@ -21,8 +26,7 @@ class FlutterSplitNavigatorObserver extends NavigatorObserver
   }
 
   @override
-  void didPush(Route route, Route? previousRoute) => notifyListeners();
-
-  @override
-  void didRemove(Route route, Route? previousRoute) => notifyListeners();
+  void didPush(Route route, Route? previousRoute) {
+    Future.delayed(Duration.zero, notifyListeners);
+  }
 }

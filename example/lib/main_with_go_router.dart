@@ -16,10 +16,12 @@ class CustomSplitView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _State();
 
-  static final chatNavigatorKey = GlobalKey<NavigatorState>();
   static final chatNavigatorObserver = FlutterSplitNavigatorObserver();
-  static final settingNavigatorKey = GlobalKey<NavigatorState>();
   static final settingNavigatorObserver = FlutterSplitNavigatorObserver();
+
+  static bool isSplitOf(BuildContext context) {
+    return context.findAncestorStateOfType<_State>()!.isSplit;
+  }
 }
 
 class _State extends State<CustomSplitView> with FlutterSplitHandler {
@@ -28,8 +30,8 @@ class _State extends State<CustomSplitView> with FlutterSplitHandler {
 
   @override
   bool canPop() => switch (widget.navigationShell.currentIndex) {
-    0 => CustomSplitView.chatNavigatorKey.currentState?.canPop() ?? false,
-    1 => CustomSplitView.settingNavigatorKey.currentState?.canPop() ?? false,
+    0 => CustomSplitView.chatNavigatorObserver.canPop(),
+    1 => CustomSplitView.settingNavigatorObserver.canPop(),
     int() => throw UnimplementedError(),
   };
 
@@ -75,17 +77,21 @@ class MyApp extends StatelessWidget {
           StatefulShellRoute.indexedStack(
             branches: [
               StatefulShellBranch(
-                navigatorKey: CustomSplitView.chatNavigatorKey,
                 observers: [CustomSplitView.chatNavigatorObserver],
                 routes: [
                   GoRoute(
                     path: '/chat',
-                    builder: (context, state) => Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-                      alignment: Alignment.center,
-                      child: const Text('Select a chat'),
+                    builder: (context, state) => Visibility(
+                      visible: CustomSplitView.isSplitOf(context),
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: CupertinoTheme.of(
+                          context,
+                        ).scaffoldBackgroundColor,
+                        alignment: Alignment.center,
+                        child: const Text('Select a chat'),
+                      ),
                     ),
                     routes: [
                       GoRoute(
@@ -99,17 +105,21 @@ class MyApp extends StatelessWidget {
                 ],
               ),
               StatefulShellBranch(
-                navigatorKey: CustomSplitView.settingNavigatorKey,
                 observers: [CustomSplitView.settingNavigatorObserver],
                 routes: [
                   GoRoute(
                     path: '/setting',
-                    builder: (context, state) => Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: CupertinoTheme.of(context).scaffoldBackgroundColor,
-                      alignment: Alignment.center,
-                      child: const Text('Select a setting'),
+                    builder: (context, state) => Visibility(
+                      visible: CustomSplitView.isSplitOf(context),
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: CupertinoTheme.of(
+                          context,
+                        ).scaffoldBackgroundColor,
+                        alignment: Alignment.center,
+                        child: const Text('Select a setting'),
+                      ),
                     ),
                     routes: [
                       GoRoute(
