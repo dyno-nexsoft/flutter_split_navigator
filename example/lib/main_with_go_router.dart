@@ -59,6 +59,26 @@ class _State extends State<CustomSplitView> with FlutterSplitHandler {
   }
 }
 
+class CustomPlaceholder extends StatelessWidget {
+  const CustomPlaceholder({super.key, required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: CustomSplitView.isSplitOf(context),
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+        alignment: Alignment.center,
+        child: Text(text),
+      ),
+    );
+  }
+}
+
 void main() {
   runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
@@ -81,18 +101,8 @@ class MyApp extends StatelessWidget {
                 routes: [
                   GoRoute(
                     path: '/chat',
-                    builder: (context, state) => Visibility(
-                      visible: CustomSplitView.isSplitOf(context),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: CupertinoTheme.of(
-                          context,
-                        ).scaffoldBackgroundColor,
-                        alignment: Alignment.center,
-                        child: const Text('Select a chat'),
-                      ),
-                    ),
+                    builder: (context, state) =>
+                        CustomPlaceholder(text: 'Select a chat'),
                     routes: [
                       GoRoute(
                         path: ':chatId',
@@ -109,18 +119,8 @@ class MyApp extends StatelessWidget {
                 routes: [
                   GoRoute(
                     path: '/setting',
-                    builder: (context, state) => Visibility(
-                      visible: CustomSplitView.isSplitOf(context),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: CupertinoTheme.of(
-                          context,
-                        ).scaffoldBackgroundColor,
-                        alignment: Alignment.center,
-                        child: const Text('Select a setting'),
-                      ),
-                    ),
+                    builder: (context, state) =>
+                        CustomPlaceholder(text: 'Select a setting'),
                     routes: [
                       GoRoute(
                         path: ':settingId',

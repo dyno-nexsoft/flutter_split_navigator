@@ -24,10 +24,6 @@ Wrap your `MaterialApp` with `FlutterSplitView` and provide an `onGenerateRoute`
 import 'package:flutter/material.dart';
 import 'package:flutter_split_view/flutter_split_view.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -44,50 +40,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class MyScreen extends StatelessWidget {
-  const MyScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Example split view')),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FilledButton(
-              onPressed: () => Navigator.of(context).pushNamed('/'),
-              child: const Text('Navigator push'),
-            ),
-            const SizedBox(height: 16),
-            FilledButton(
-              onPressed: () => FlutterSplitView.of(context).pushNamed('/'),
-              child: const Text('FlutterSplitView push'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 ```
-
-To push a new route to the secondary panel, use `FlutterSplitView.of(context).pushNamed('/your-route')`.
-
----
-
-## API
-
-### `FlutterSplitView`
-
-| Property          | Description                                                 | Default         |
-| ----------------- | ----------------------------------------------------------- | --------------- |
-| `breakpoint`      | Minimum width to show both panels side-by-side              | `600.0`         |
-| `placeholder`     | Widget shown in the secondary panel when no route is pushed | `Placeholder()` |
-| `onGenerateRoute` | Route generator for navigation in both panels               | _(required)_    |
-
-#### Accessing the secondary navigator
 
 You can push routes to the secondary panel using:
 
@@ -96,3 +49,11 @@ FlutterSplitView.of(context).pushNamed('/details');
 ```
 
 ---
+
+## API
+
+| Property          | Description                                                 | Default         |
+| ----------------- | ----------------------------------------------------------- | --------------- |
+| `breakpoint`      | Minimum width to show both panels side-by-side              | `600.0`         |
+| `placeholder`     | Widget shown in the secondary panel when no route is pushed | `Placeholder()` |
+| `onGenerateRoute` | Route generator for navigation in both panels               | _(required)_    |
