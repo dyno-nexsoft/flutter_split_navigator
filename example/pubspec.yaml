@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_split_view:
+  flutter_split_navigator:
     path: ../
   device_preview: ^1.3.1
   go_router: ^16.2.0

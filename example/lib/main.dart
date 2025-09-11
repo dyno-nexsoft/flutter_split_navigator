@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:flutter_split_navigator/flutter_split_navigator.dart';
 import 'package:device_preview/device_preview.dart';
 
 void main() {
-  runApp(DevicePreview(
-    enabled: true,
-    builder: (context) => const MyApp(),
-  ));
+  runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -19,17 +16,13 @@ class MyApp extends StatelessWidget {
       builder: DevicePreview.appBuilder,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: FlutterSplitView(
+      home: FlutterSplitNavigator(
         breakpoint: 700,
         placeholder: const Material(
-          child: Center(
-            child: Text('Select an item'),
-          ),
+          child: Center(child: Text('Select an item')),
         ),
         onGenerateRoute: (settings) {
-          return MaterialPageRoute(
-            builder: (context) => const MyScreen(),
-          );
+          return MaterialPageRoute(builder: (context) => const MyScreen());
         },
       ),
     );
@@ -53,8 +46,8 @@ class MyScreen extends StatelessWidget {
             );
           } else {
             return ListTile(
-              onTap: () => FlutterSplitView.of(context).pushNamed('/'),
-              title: const Text('FlutterSplitView push'),
+              onTap: () => FlutterSplitNavigator.of(context).pushNamed('/'),
+              title: const Text('FlutterSplitNavigator push'),
             );
           }
         },

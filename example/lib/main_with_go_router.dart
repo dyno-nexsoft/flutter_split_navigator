@@ -1,10 +1,10 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:flutter_split_navigator/flutter_split_navigator.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomSplitView extends StatefulWidget {
-  const CustomSplitView({
+class CustomSplitNavigator extends StatefulWidget {
+  const CustomSplitNavigator({
     super.key,
     required this.navigationShell,
     required this.child,
@@ -16,22 +16,22 @@ class CustomSplitView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _State();
 
-  static final chatNavigatorObserver = FlutterSplitNavigatorObserver();
-  static final settingNavigatorObserver = FlutterSplitNavigatorObserver();
+  static final chatObserver = FlutterSplitObserver();
+  static final settingObserver = FlutterSplitObserver();
 
   static bool isSplitOf(BuildContext context) {
     return context.findAncestorStateOfType<_State>()!.isSplit;
   }
 }
 
-class _State extends State<CustomSplitView> with FlutterSplitHandler {
+class _State extends State<CustomSplitNavigator> with FlutterSplitHandler {
   @override
   double get breakpoint => 700.0;
 
   @override
   bool canPop() => switch (widget.navigationShell.currentIndex) {
-    0 => CustomSplitView.chatNavigatorObserver.canPop(),
-    1 => CustomSplitView.settingNavigatorObserver.canPop(),
+    0 => CustomSplitNavigator.chatObserver.canPop(),
+    1 => CustomSplitNavigator.settingObserver.canPop(),
     int() => throw UnimplementedError(),
   };
 
@@ -39,8 +39,8 @@ class _State extends State<CustomSplitView> with FlutterSplitHandler {
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: Listenable.merge([
-        CustomSplitView.chatNavigatorObserver,
-        CustomSplitView.settingNavigatorObserver,
+        CustomSplitNavigator.chatObserver,
+        CustomSplitNavigator.settingObserver,
       ]),
       builder: (context, child) {
         return super.buildSplit(context);
@@ -67,7 +67,7 @@ class CustomPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: CustomSplitView.isSplitOf(context),
+      visible: CustomSplitNavigator.isSplitOf(context),
       child: Container(
         width: double.infinity,
         height: double.infinity,
@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
           StatefulShellRoute.indexedStack(
             branches: [
               StatefulShellBranch(
-                observers: [CustomSplitView.chatNavigatorObserver],
+                observers: [CustomSplitNavigator.chatObserver],
                 routes: [
                   GoRoute(
                     path: '/chat',
@@ -115,7 +115,7 @@ class MyApp extends StatelessWidget {
                 ],
               ),
               StatefulShellBranch(
-                observers: [CustomSplitView.settingNavigatorObserver],
+                observers: [CustomSplitNavigator.settingObserver],
                 routes: [
                   GoRoute(
                     path: '/setting',
@@ -134,7 +134,7 @@ class MyApp extends StatelessWidget {
               ),
             ],
             builder: (context, state, navigationShell) {
-              return CustomSplitView(
+              return CustomSplitNavigator(
                 navigationShell: navigationShell,
                 child: DashboardScreen(
                   state: state,

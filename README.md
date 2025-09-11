@@ -1,7 +1,7 @@
-# flutter_split_view
+# flutter_split_navigator
 
-[![Deploy Web](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml/badge.svg)](https://github.com/dyno-nexsoft/flutter_split_view/actions/workflows/deploy_web.yml)
-[![GitHub issues](https://img.shields.io/github/issues/dyno-nexsoft/flutter_split_view.svg)](https://github.com/dyno-nexsoft/flutter_split_view/issues)
+[![Deploy Web](https://github.com/dyno-nexsoft/flutter_split_navigator/actions/workflows/deploy_web.yml/badge.svg)](https://github.com/dyno-nexsoft/flutter_split_navigator/actions/workflows/deploy_web.yml)
+[![GitHub issues](https://img.shields.io/github/issues/dyno-nexsoft/flutter_split_navigator.svg)](https://github.com/dyno-nexsoft/flutter_split_navigator/issues)
 
 A Flutter widget for building responsive split view layouts. Show two panels side-by-side on wide screens, and a single panel with secondary navigation on narrow screens.
 

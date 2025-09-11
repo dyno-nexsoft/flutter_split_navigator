@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-class FlutterSplitNavigatorObserver extends NavigatorObserver
-    with ChangeNotifier {
+class FlutterSplitObserver extends NavigatorObserver with ChangeNotifier {
   bool _canPop = false;
 
   bool canPop() => _canPop;

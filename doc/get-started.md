@@ -1,11 +1,11 @@
 ## Getting Started
 
-Add `flutter_split_view` to your `pubspec.yaml` dependencies from GitHub:
+Add `flutter_split_navigator` to your `pubspec.yaml` dependencies from GitHub:
 
 ```yaml
 dependencies:
-  flutter_split_view:
-    git: https://github.com/dyno-nexsoft/flutter_split_view.git
+  flutter_split_navigator:
+    git: https://github.com/dyno-nexsoft/flutter_split_navigator.git
 ```
 
 ---
@@ -15,14 +15,14 @@ dependencies:
 Import the package:
 
 ```dart
-import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:flutter_split_navigator/flutter_split_navigator.dart';
 ```
 
-Wrap your `MaterialApp` with `FlutterSplitView` and provide an `onGenerateRoute` callback:
+Wrap your `MaterialApp` with `FlutterSplitNavigator` and provide an `onGenerateRoute` callback:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:flutter_split_view/flutter_split_view.dart';
+import 'package:flutter_split_navigator/flutter_split_navigator.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: FlutterSplitView(
+      home: FlutterSplitNavigator(
         onGenerateRoute: (settings) {
           return MaterialPageRoute(
             builder: (context) => const MyScreen(),
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
 You can push routes to the secondary panel using:
 
 ```dart
-FlutterSplitView.of(context).pushNamed('/details');
+FlutterSplitNavigator.of(context).pushNamed('/details');
 ```
 
 ---

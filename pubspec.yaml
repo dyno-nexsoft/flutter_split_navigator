@@ -1,7 +1,7 @@
-name: flutter_split_view
+name: flutter_split_navigator
 description: "A Flutter widget that creates a split view layout, showing two panels side-by-side on wider screens and a single panel on narrower screens."
 version: 1.0.0
-repository: https://github.com/dyno-nexsoft/flutter_split_view
+repository: https://github.com/dyno-nexsoft/flutter_split_navigator
 
 environment:
   sdk: ^3.5.4

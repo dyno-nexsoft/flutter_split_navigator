@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-import 'observers.dart';
+import 'split_observers.dart';
 import 'split_handler.dart';
 
 /// A widget that creates a split view layout, showing two panels side-by-side
 /// on wider screens and a single panel on narrower screens.
 ///
-/// The [FlutterSplitView] widget is designed for responsive applications that
+/// The [FlutterSplitNavigator] widget is designed for responsive applications that
 /// want to display a primary and secondary view. When the available width
 /// exceeds the [breakpoint], both panels are shown side-by-side. On smaller
 /// screens, only the primary panel is shown, and navigation is handled using
@@ -17,7 +17,7 @@ import 'split_handler.dart';
 ///
 /// Example usage:
 /// ```dart
-/// FlutterSplitView(
+/// FlutterSplitNavigator(
 ///   breakpoint: 800,
 ///   placeholder: Center(child: Text('Select an item')),
 ///   onGenerateRoute: (settings) {
@@ -29,9 +29,9 @@ import 'split_handler.dart';
 /// See also:
 ///  * [Navigator], which this widget extends.
 ///  * [LayoutBuilder], used internally for responsiveness.
-class FlutterSplitView extends Navigator {
+class FlutterSplitNavigator extends Navigator {
   /// Creates a split view layout.
-  const FlutterSplitView({
+  const FlutterSplitNavigator({
     super.key,
     super.initialRoute,
     super.onGenerateInitialRoutes,
@@ -63,19 +63,19 @@ class FlutterSplitView extends Navigator {
   final Widget placeholder;
 
   @override
-  NavigatorState createState() => _FlutterSplitViewState();
+  NavigatorState createState() => _FlutterSplitNavigatorState();
 
   /// Returns the [NavigatorState] for the secondary panel from the closest
-  /// [FlutterSplitView] ancestor of the given [context].
+  /// [FlutterSplitNavigator] ancestor of the given [context].
   ///
   /// This is useful for pushing or popping routes on the secondary panel's
-  /// [Navigator]. Throws a [FlutterError] if no [FlutterSplitView] ancestor
+  /// [Navigator]. Throws a [FlutterError] if no [FlutterSplitNavigator] ancestor
   /// can be found in the widget tree.
   static NavigatorState of(BuildContext context) {
     return _of(context)._secondaryObserver.navigator!;
   }
 
-  /// Returns `true` if the [FlutterSplitView] ancestor of the given [context]
+  /// Returns `true` if the [FlutterSplitNavigator] ancestor of the given [context]
   /// is currently displaying both panels side-by-side (split mode).
   ///
   /// This can be used to determine whether the split view is active, based on
@@ -83,18 +83,19 @@ class FlutterSplitView extends Navigator {
   ///
   /// Example:
   /// ```dart
-  /// final isSplit = FlutterSplitView.isSplitOf(context);
+  /// final isSplit = FlutterSplitNavigator.isSplitOf(context);
   /// ```
   static bool isSplitOf(BuildContext context) {
     return _of(context).isSplit;
   }
 }
 
-class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
-  late final _secondaryObserver = FlutterSplitNavigatorObserver();
+class _FlutterSplitNavigatorState extends NavigatorState
+    with FlutterSplitHandler {
+  late final _secondaryObserver = FlutterSplitObserver();
 
   @override
-  FlutterSplitView get widget => super.widget as FlutterSplitView;
+  FlutterSplitNavigator get widget => super.widget as FlutterSplitNavigator;
 
   @override
   double get breakpoint => widget.breakpoint;
@@ -131,7 +132,7 @@ class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
             ) {
               return Builder(
                 builder: (context) {
-                  if (FlutterSplitView.isSplitOf(context)) {
+                  if (FlutterSplitNavigator.isSplitOf(context)) {
                     return widget.placeholder;
                   }
                   return const SizedBox.shrink();
@@ -155,19 +156,20 @@ class _FlutterSplitViewState extends NavigatorState with FlutterSplitHandler {
   }
 }
 
-_FlutterSplitViewState _of(BuildContext context) {
-  _FlutterSplitViewState? navigator;
-  if (context is StatefulElement && context.state is _FlutterSplitViewState) {
-    navigator = context.state as _FlutterSplitViewState;
+_FlutterSplitNavigatorState _of(BuildContext context) {
+  _FlutterSplitNavigatorState? navigator;
+  if (context is StatefulElement &&
+      context.state is _FlutterSplitNavigatorState) {
+    navigator = context.state as _FlutterSplitNavigatorState;
   }
-  navigator ??= context.findAncestorStateOfType<_FlutterSplitViewState>();
+  navigator ??= context.findAncestorStateOfType<_FlutterSplitNavigatorState>();
 
   assert(() {
     if (navigator == null) {
       throw FlutterError(
-        'FlutterSplitView operation requested with a context that does not include a FlutterSplitView.\n'
-        'The context used to push or pop routes from the FlutterSplitView must be that of a '
-        'widget that is a descendant of a FlutterSplitView widget.',
+        'FlutterSplitNavigator operation requested with a context that does not include a FlutterSplitNavigator.\n'
+        'The context used to push or pop routes from the FlutterSplitNavigator must be that of a '
+        'widget that is a descendant of a FlutterSplitNavigator widget.',
       );
     }
     return true;
