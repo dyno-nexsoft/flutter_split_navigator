@@ -25,14 +25,13 @@ mixin FlutterSplitHandler<T extends StatefulWidget> on State<T> {
         secondaryLeft = primaryWidth;
         secondaryWidth = constraints.maxWidth - primaryWidth;
       } else {
+        primaryWidth = constraints.maxWidth;
         if (canPop() == true) {
           secondaryLeft = 0;
-          secondaryWidth = constraints.maxWidth;
         } else {
           secondaryLeft = constraints.maxWidth;
-          secondaryWidth = constraints.maxWidth;
         }
-        primaryWidth = constraints.maxWidth;
+        secondaryWidth = constraints.maxWidth;
       }
 
       return Stack(

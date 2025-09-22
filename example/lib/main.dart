@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_split_navigator/flutter_split_navigator.dart';
-import 'package:device_preview/device_preview.dart';
 
 void main() {
-  runApp(DevicePreview(enabled: true, builder: (context) => const MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -12,10 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      locale: DevicePreview.locale(context),
-      builder: DevicePreview.appBuilder,
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
       home: FlutterSplitNavigator(
         breakpoint: 700,
         placeholder: const Material(
@@ -36,21 +31,22 @@ class MyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Example split view')),
-      body: ListView.builder(
-        itemCount: 100,
-        itemBuilder: (BuildContext context, int index) {
-          if (index.isEven) {
-            return ListTile(
-              onTap: () => Navigator.of(context).pushNamed('/'),
-              title: const Text('Navigator push'),
-            );
-          } else {
-            return ListTile(
-              onTap: () => FlutterSplitNavigator.of(context).pushNamed('/'),
-              title: const Text('FlutterSplitNavigator push'),
-            );
-          }
-        },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ListTile(
+            onTap: () => showAboutDialog(context: context),
+            title: const Text('About dialog'),
+          ),
+          ListTile(
+            onTap: () => Navigator.of(context).pushNamed('/'),
+            title: const Text('Navigator push'),
+          ),
+          ListTile(
+            onTap: () => FlutterSplitNavigator.of(context).pushNamed('/'),
+            title: const Text('FlutterSplitNavigator push'),
+          ),
+        ],
       ),
     );
   }

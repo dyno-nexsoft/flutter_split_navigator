@@ -121,23 +121,17 @@ class _FlutterSplitNavigatorState extends NavigatorState
   @override
   Widget buildSecondary(BuildContext context) {
     return Navigator(
-      observers: [_secondaryObserver, ...widget.observers],
+      observers: [_secondaryObserver],
       onGenerateInitialRoutes: (navigator, initialRoute) {
         return [
           PageRouteBuilder(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return Builder(
-                builder: (context) {
-                  if (FlutterSplitNavigator.isSplitOf(context)) {
-                    return widget.placeholder;
-                  }
-                  return const SizedBox.shrink();
-                },
-              );
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return Builder(builder: (context) {
+                if (FlutterSplitNavigator.isSplitOf(context)) {
+                  return widget.placeholder;
+                }
+                return const SizedBox.shrink();
+              });
             },
           )
         ];
