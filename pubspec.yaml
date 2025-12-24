@@ -4,8 +4,7 @@ version: 1.0.0
 repository: https://github.com/dyno-nexsoft/flutter_split_navigator
 
 environment:
-  sdk: ^3.5.4
-  flutter: ">=1.17.0"
+  sdk: ^3.0.0
 
 dependencies:
   flutter:
